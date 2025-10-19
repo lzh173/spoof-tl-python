@@ -26,4 +26,4 @@ jobs:
     - name: Run nmap scan
       run: |
         echo "开始扫描目标: ${{ github.event.inputs.target }}"
-        nmap -A "${{ github.event.inputs.target }}"
+        nmap "${{ github.event.inputs.target }}"
