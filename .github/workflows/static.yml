@@ -8,6 +8,11 @@ on:
         required: true
         default: 'example.com'
         type: string
+      nmap_args:
+        description: 'Nmap 参数 (例如: -A, -sS, -O, -v 等)'
+        required: true
+        default: '-A'
+        type: string
 
 jobs:
   run-commands:
@@ -26,4 +31,5 @@ jobs:
     - name: Run nmap scan
       run: |
         echo "开始扫描目标: ${{ github.event.inputs.target }}"
-        nmap "${{ github.event.inputs.target }}"
+        echo "使用参数: ${{ github.event.inputs.nmap_args }}"
+        nmap ${{ github.event.inputs.nmap_args }} "${{ github.event.inputs.target }}"
