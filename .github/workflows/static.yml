@@ -1,0 +1,23 @@
+name: Manual Command Execution
+
+on:
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  run-commands:
+    name: Run custom commands
+    runs-on: ubuntu-latest  # 使用最新的 Ubuntu 运行器
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4  # 可选：如果需要访问代码库
+
+    - name: Run first command
+      run: |
+        sudo apt update
+        
+        sudo apt install nmap
+
+    - name: Run second command
+      run: |
+        nmap -A www.iisworld.cn
