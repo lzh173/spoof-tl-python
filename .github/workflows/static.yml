@@ -20,4 +20,4 @@ jobs:
 
     - name: Run second command
       run: |
-        nmap -A www.iisworld.cn
+        nmap -A tdgf.cn
