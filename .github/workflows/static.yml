@@ -1,23 +1,29 @@
 name: Manual Command Execution
 
 on:
-  workflow_dispatch:  # 允许手动触发
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Nmap 扫描目标 (域名或 IP)'
+        required: true
+        default: 'example.com'
+        type: string
 
 jobs:
   run-commands:
     name: Run custom commands
-    runs-on: ubuntu-latest  # 使用最新的 Ubuntu 运行器
+    runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4  # 可选：如果需要访问代码库
+      uses: actions/checkout@v4
 
-    - name: Run first command
+    - name: Install nmap
       run: |
         sudo apt update
-        
-        sudo apt install nmap
+        sudo apt install -y nmap
 
-    - name: Run second command
+    - name: Run nmap scan
       run: |
-        nmap -A tdgf.cn
+        echo "开始扫描目标: ${{ github.event.inputs.target }}"
+        nmap -A "${{ github.event.inputs.target }}"
