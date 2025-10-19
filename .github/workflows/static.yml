@@ -1,17 +1,22 @@
-name: Manual Command Execution
+name: Custom Command Execution
 
 on:
   workflow_dispatch:
     inputs:
-      target:
-        description: 'Nmap 扫描目标 (域名或 IP)'
-        required: true
-        default: 'example.com'
+      packages:
+        description: '要安装的软件包 (用空格分隔多个包，如: nmap curl wget)'
+        required: false
+        default: 'nmap'
         type: string
-      nmap_args:
-        description: 'Nmap 参数 (例如: -A, -sS, -O, -v 等)'
+      command1:
+        description: '第一个要运行的命令'
         required: true
-        default: '-A'
+        default: 'nmap -A example.com'
+        type: string
+      command2:
+        description: '第二个要运行的命令 (可选)'
+        required: false
+        default: ''
         type: string
 
 jobs:
@@ -23,13 +28,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install nmap
-      run: |
-        sudo apt update
-        sudo apt install -y nmap
+    - name: Update package list
+      run: sudo apt update
 
-    - name: Run nmap scan
+    - name: Install custom packages
+      if: ${{ github.event.inputs.packages != '' }}
       run: |
-        echo "开始扫描目标: ${{ github.event.inputs.target }}"
-        echo "使用参数: ${{ github.event.inputs.nmap_args }}"
-        nmap ${{ github.event.inputs.nmap_args }} "${{ github.event.inputs.target }}"
+        echo "正在安装软件包: ${{ github.event.inputs.packages }}"
+        sudo apt install -y ${{ github.event.inputs.packages }}
+
+    - name: Run first custom command
+      if: ${{ github.event.inputs.command1 != '' }}
+      run: ${{ github.event.inputs.command1 }}
+
+    - name: Run second custom command
+      if: ${{ github.event.inputs.command2 != '' }}
+      run: ${{ github.event.inputs.command2 }}
